@@ -1,0 +1,19 @@
+# Puzzles at sadservers.com
+
+# "Saint John": what is writing to this log file?
+
+lsof /var/log/bad.log
+kill [PID of process seen]
+
+# "Saskatoon": counting IPs.
+
+awk '{print $1}' /home/admin/access.log | sort | uniq -c | sort | tail -n 1 | awk '{print $2}' > /home/admin/highestip.txt
+
+# "Santiago": Find the secret combination
+
+line_count=$(grep -H 'Alice' /home/admin/*.txt | wc -l)
+echo -n $line_count > /home/admin/solution
+alice_file=$(grep -H 'Alice' /home/admin/*.txt | sort | awk -F ':' '{print $1}' | uniq -c | sort | head -n 1 | awk '{print $2}')
+num_line=$(grep -n 'Alice' $alice_file | awk -F ':' '{print $1}')
+num_line=$(($num_line + 1))
+cat $alice_file | head -n $num_line | tail -n 1 | egrep -o '[0-9]+' >> /home/admin/solution
