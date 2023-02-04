@@ -17,3 +17,11 @@ alice_file=$(grep -H 'Alice' /home/admin/*.txt | sort | awk -F ':' '{print $1}' 
 num_line=$(grep -n 'Alice' $alice_file | awk -F ':' '{print $1}')
 num_line=$(($num_line + 1))
 cat $alice_file | head -n $num_line | tail -n 1 | egrep -o '[0-9]+' >> /home/admin/solution
+
+# "Manhattan": can't write data into database.
+
+# tail /var/log/postgresql/postgresql-14-main.log
+# 2023-02-04 18:49:33.116 UTC [883] FATAL:  could not create lock file "postmaster.pid": No space left on device
+
+rm /opt/pgdata/*.bk
+systemctl start postgresql
