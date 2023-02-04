@@ -30,3 +30,16 @@ systemctl start postgresql
 
 iptables --flush; iptables -I INPUT -p tcp --dport 80; iptables-save
 chown www-data:www-data -R /var/www
+
+# 6 "Cape Town": Borked Nginx
+
+sudo systemctl status nginx
+#nginx: [emerg] unexpected ";" in /etc/nginx/sites-enabled/default:1
+# -- edit stray semicolon on line 1 of /etc/nginx/sites-enabled/default
+sudo systemctl start nginx
+# curl returns 500 error
+tail /var/log/nginx/error.log
+# -- open() "/var/www/html/index.nginx-debian.html" failed (24: Too many open files)
+# add line: worker_rlimit_nofile 20000;
+# to file /etc/nginx/nginx.conf 
+sudo systemctl restart nginx
